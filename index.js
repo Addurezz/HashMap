@@ -34,7 +34,7 @@ class HashMap {
         this.size++
 
         if(this.size / this.buckets.length > this.loadFactor) {
-            this.resize;
+            this.resize();
         }
     }
 
@@ -62,7 +62,7 @@ class HashMap {
         const bucket = this.buckets[index];
 
         if(bucket) {
-            for(let i=0; i<this.buckets.length; i++) {
+            for(let i=0; i<bucket.length; i++) {
                 if(bucket[i][0] === key) {
                     bucket.splice(i,1);
                     this.size--;
@@ -86,10 +86,12 @@ class HashMap {
     keys() {
         const keyArr = [];
 
-        for (let i = 0; i<this.buckets.length; i++) {
-            if (this.buckets[i] !== undefined && this.buckets[i][0] !== undefined) {
-                for(let k=0; k<this.buckets[i].length; k++) {
-                    keyArr.push(this.buckets[i][k][0]);
+        for (let i = 0; i < this.buckets.length; i++) {
+            const bucket = this.buckets[i];
+
+            if (bucket) {
+                for (let k = 0; k < bucket.length; k++) {
+                    keyArr.push(bucket[k][0]);
                 }
             }
         }
@@ -100,6 +102,8 @@ class HashMap {
     resize() {
         const oldBuckets = this.buckets;
         const newCapacity = oldBuckets.length * 2;
+        this.buckets = new Array(newCapacity);
+        this.size = 0;
 
         for(const bucket of oldBuckets) {
             if(bucket) {
@@ -123,4 +127,4 @@ test.set('ice cream', 'white')
 test.set('jacket', 'blue')
 test.set('kite', 'pink')
 test.set('lion', 'golden')
-// test.set('moon', 'silver')
+
